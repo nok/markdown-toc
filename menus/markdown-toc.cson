@@ -1,0 +1,24 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle markdown-toc'
+      'command': [
+          'markdown-toc:activate'
+        ]
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'markdown-toc'
+      'submenu': [
+        {
+          'label': 'Toggle'
+          'command': 'markdown-toc:activate'
+        }
+      ]
+    ]
+  }
+]
