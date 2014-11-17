@@ -1,100 +1,126 @@
 module.exports =
 class Toc
 
-  tree:
-    open:
-      pattern: /<!-- TOC -->/g
-      line: undefined
-    close:
-      pattern: /<!-- \/TOC -->/g
-      line: undefined
-    has: false
-    data: {}
-
-  # lines
-  # table
-
   constructor: (@pane) ->
+    @lines = []
+    @list = {}
+    @options = {} # depth/links/update
+
     @updateLines()
 
-    @table = new Array
-
-    # cursorRow = @pane.getCursor().getScreenRow()
-
-    if @hasToc @lines
-      # update toc
-      console.log 'update'
+    if @hasToc()
+      @updateToc()
+      # cursorRow = @pane.getCursor().getScreenRow()
     else
-      # create toc
       @pane.insertText @createToc()
 
+    # changes
     at = @
     @pane.onDidChange (change) ->
       at.onChange(change)
+
 
   updateLines: ->
     if @pane isnt undefined
       @lines = @pane.getBuffer().getLines()
     else
-      @lines = new Array
+      @lines = []
 
-  updateTable: (level=6) ->
-    @table = {}
 
+  updateList: () ->
+    @list = {}
     for i of @lines
       line = @lines[i]
       result = line.match /^\#{1,6}/
       if result
-        if result[0].length <= level
-          @table[result[0].length] = line
+        depth = if @options.depth isnt undefined then @options.depth else 6
+        if result[0].length <= parseInt depth
+          @list[result[0].length] = line
+
 
   createToc: () ->
-    @updateTable()
-
-    if Object.keys(@table).length > 0
-      text = new Array
-      text.push "<!-- TOC -->"
-      for own level, line of @table
-        row = new Array
-        for tab in [1..level] when tab > 1
-          row.push "\t"
-        row.push "- "
-        line = line.substr level
-        line = line.trim()
-        row.push line
-        text.push row.join ""
+    @updateList()
+    if Object.keys(@list).length > 0
+      text = []
+      text.push "<!-- TOC depth:6 links:1 update:1 -->"
+      list = @createList()
+      if list isnt false
+        Array.prototype.push.apply text, list
       text.push "<!-- /TOC -->"
       return text.join "\n"
     return ""
 
-  hasToc: (lines) ->
-    if lines.length > 0
 
-      openToc = undefined
-      closeTo = undefined
+  updateToc: () ->
+    # TODO implement update
+    console.log 'update toc'
 
-      for i of lines
-        line = lines[i]
 
-        if openToc is undefined
-          if line.match @tree.open.pattern
-            openToc = i
+  createList: () ->
+    list = []
+    for own level, line of @list
+      row = []
+      for tab in [1..level] when tab > 1
+        row.push "\t"
+      row.push "- "
+      line = line.substr level
+      line = line.trim()
+      row.push line
+      list.push row.join ""
+    if list.length > 0
+      return list
+    return false
+
+
+  updateOptions: (line) ->
+    options = line.match /(\w+(=|:)(\d|yes|no))+/g
+    if options
+      @options = {}
+      for i of options
+        option = options[i]
+
+        key = option.match /^(\w+)/g
+        key = new String key[0]
+
+        value = option.match /(\d|yes|no)$/g
+        value = new String value[0]
+        if value.length > 1
+          if value.toLowerCase().valueOf() is new String("yes").valueOf()
+            value = 1
+          else
+            value = 0
+
+        if key.toLowerCase().valueOf() is new String("depth").valueOf()
+          @options.depth = parseInt value
+        else if key.toLowerCase().valueOf() is new String("links").valueOf()
+          @options.links = parseInt value
+
+
+  hasToc: () ->
+    if @lines.length > 0
+      open = undefined
+      close = undefined
+      options = undefined
+
+      for i of @lines
+        line = @lines[i]
+        if open is false
+          if line.match /^<!--(.*)TOC(.*)-->$/g
+            open = i
+            options = line
         else
-          if line.match @tree.close.pattern
-            closeToc = i
+          if line.match /^<!--(.*)\/TOC(.*)-->$/g
+            close = i
             break
 
-      @tree.has = openToc isnt undefined and closeToc isnt undefined
-      return @tree.has
+      if open isnt undefined and close isnt undefined
+        if options isnt undefined
+          @updateOptions options
+          return true
+
     return false
+
 
   onChange: (change) ->
     @updateLines()
-    console.log change
-
-    # if @hasToc @getLines()
-    #   console.log 'has TOC'
-    #   console.log '-> update'
-    # else
-    #   console.log 'hasnt TOC'
-    #   console.log '-> insert?'
+    @updateToc()
