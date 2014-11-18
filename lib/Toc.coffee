@@ -6,9 +6,17 @@ class Toc
     @lines = []
     @list = []
     @options =
-      depth: 6
-      links: 1
+      depth: 6  # depth
+      links: 1  # withLinks
+      update: 1 # updateOnSave
     @create()
+
+    at = @
+    @editor.getBuffer().onWillSave () ->
+      if at.options.update is 1
+        if at._hasToc()
+          at._deleteToc()
+          at.editor.setTextInBufferRange [[at.open,0], [at.open,0]], at._createToc()
 
 
   # ----------------------------------------------------------------------------
@@ -36,9 +44,6 @@ class Toc
 
 
   autosave: ->
-
-    console.log 'autosave'
-
     if @_hasToc()
       @_deleteToc()
       @editor.setTextInBufferRange [[@open,0], [@open,0]], @_createToc()
@@ -80,7 +85,7 @@ class Toc
     @__updateList()
     if Object.keys(@list).length > 0
       text = []
-      text.push "<!-- TOC depth:"+@options.depth+" links:"+@options.links+" -->"
+      text.push "<!-- TOC depth:"+@options.depth+" withLinks:"+@options.links+" updateOnSave:"+@options.update+" -->"
       list = @__createList()
       if list isnt false
         Array.prototype.push.apply text, list
@@ -152,8 +157,10 @@ class Toc
 
         if key.toLowerCase().valueOf() is new String("depth").valueOf()
           @options.depth = parseInt value
-        else if key.toLowerCase().valueOf() is new String("links").valueOf()
+        else if key.toLowerCase().valueOf() is new String("withlinks").valueOf()
           @options.links = parseInt value
+        else if key.toLowerCase().valueOf() is new String("updateonsave").valueOf()
+          @options.update = parseInt value
 
 
   # ----------------------------------------------------------------------------

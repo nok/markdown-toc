@@ -1,7 +1,29 @@
-# markdown-toc package
+# Markdown TOC
 
-**Work in progress.**
+Generate TOC (*table of contents*) of headlines from parsed [markdown](http://en.wikipedia.org/wiki/Markdown) file.
 
-A short description of your package.
+![Usage example](RECORD.gif)
 
-![A screenshot of your spankin' package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+## Installation
+
+```bash
+apm install markdown-toc
+```
+
+
+## Features
+
+- Depth control [1-6]
+- Auto linking via  anchor tags, e.g.  `# A 1` → `#a-1`
+- Enable or disable links
+- Update on save
+
+
+## Questions?
+
+Don't be shy and feel free to contact me via [Twitter](http://twitter.voidplus.de).
+
+
+## License
+
+The package is Open Source Software released under the [License](LICENSE.md). It's developed by [Darius Morawiec](http://voidplus.de).
