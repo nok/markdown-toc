@@ -2,7 +2,7 @@
 
 Generate TOC (*table of contents*) of headlines from parsed [markdown](http://en.wikipedia.org/wiki/Markdown) file.
 
-![Usage example](RECORD.gif)
+![Usage example](https://raw.githubusercontent.com/voidplus/markdown-toc/master/RECORD.gif)
 
 ## Installation
 

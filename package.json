@@ -2,7 +2,7 @@
   "name": "markdown-toc",
   "main": "./lib/markdown-toc",
   "version": "0.2.0",
-  "description": "This package looks for headings in document and inserts a generated TOC (table of contents) to it.",
+  "description": "Generate TOC (table of contents) of headlines from parsed markdown file",
   "activationCommands": {
     "atom-workspace": "markdown-toc:toggle"
   },
