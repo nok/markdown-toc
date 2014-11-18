@@ -1,49 +1,87 @@
 module.exports =
 class Toc
 
-  constructor: (@pane) ->
+
+  constructor: (@editor) ->
     @lines = []
-    @list = {}
-    @options = {} # depth/links/update
+    @list = []
+    @options =
+      depth: 6
+      links: 1
+    @create()
 
-    @updateLines()
 
-    if @hasToc()
-      @updateToc()
-      # cursorRow = @pane.getCursor().getScreenRow()
+  # ----------------------------------------------------------------------------
+  # main methods (highest logic level)
+
+
+  create: ->
+    if @_hasToc()
+      @_deleteToc()
+      @editor.setTextInBufferRange [[@open,0], [@open,0]], @_createToc()
+    @editor.insertText @_createToc()
+
+
+  update: ->
+    if @_hasToc()
+      @_deleteToc()
+      @editor.setTextInBufferRange [[@open,0], [@open,0]], @_createToc()
     else
-      @pane.insertText @createToc()
-
-    # changes
-    at = @
-    @pane.onDidChange (change) ->
-      at.onChange(change)
+      @editor.insertText @_createToc()
 
 
-  updateLines: ->
-    if @pane isnt undefined
-      @lines = @pane.getBuffer().getLines()
-    else
-      @lines = []
+  delete: ->
+    if @_hasToc()
+      @_deleteToc()
 
 
-  updateList: () ->
-    @list = {}
-    for i of @lines
-      line = @lines[i]
-      result = line.match /^\#{1,6}/
-      if result
-        depth = if @options.depth isnt undefined then @options.depth else 6
-        if result[0].length <= parseInt depth
-          @list[result[0].length] = line
+  autosave: ->
+
+    console.log 'autosave'
+
+    if @_hasToc()
+      @_deleteToc()
+      @editor.setTextInBufferRange [[@open,0], [@open,0]], @_createToc()
 
 
-  createToc: () ->
-    @updateList()
+
+  # ----------------------------------------------------------------------------
+
+
+  _hasToc: () ->
+    @___updateLines()
+
+    if @lines.length > 0
+      @open = false
+      @close = false
+      options = undefined
+
+      for i of @lines
+        line = @lines[i]
+        if @open is false
+          if line.match /^<!--(.*)TOC(.*)-->$/g
+            @open = parseInt i
+            options = line
+        else
+          if line.match /^<!--(.*)\/TOC(.*)-->$/g
+            @close = parseInt i
+            break
+
+      if @open isnt false and @close isnt false
+        if options isnt undefined
+          @__updateOptions options
+          return true
+    return false
+
+
+  # embed list with the open and close comment:
+  # <!-- TOC --> [list] <!-- /TOC -->
+  _createToc: () ->
+    @__updateList()
     if Object.keys(@list).length > 0
       text = []
-      text.push "<!-- TOC depth:6 links:1 update:1 -->"
-      list = @createList()
+      text.push "<!-- TOC depth:"+@options.depth+" links:"+@options.links+" -->"
+      list = @__createList()
       if list isnt false
         Array.prototype.push.apply text, list
       text.push "<!-- /TOC -->"
@@ -51,28 +89,50 @@ class Toc
     return ""
 
 
-  updateToc: () ->
-    # TODO implement update
-    console.log 'update toc'
+  _deleteToc: () ->
+    @editor.setTextInBufferRange [[@open,0], [@close,14]], ""
 
 
-  createList: () ->
+  # ----------------------------------------------------------------------------
+
+
+  # parse all lines and find markdown headlines
+  __updateList: () ->
+    @___updateLines()
+    @list = []
+    for i of @lines
+      line = @lines[i]
+      result = line.match /^\#{1,6}/
+      if result
+        depth = if @options.depth isnt undefined then @options.depth else 6
+        if result[0].length <= parseInt depth
+          @list.push
+            depth: result[0].length
+            line: new String line
+
+
+  # create hierarchical markdown list
+  __createList: () ->
     list = []
-    for own level, line of @list
+    for own i, item of @list
       row = []
-      for tab in [1..level] when tab > 1
+      for tab in [1..item.depth] when tab > 1
         row.push "\t"
       row.push "- "
-      line = line.substr level
+      line = item.line.substr item.depth
       line = line.trim()
-      row.push line
+      if @options.links is 1
+        row.push @___createLink line
+      else
+        row.push line
+
       list.push row.join ""
     if list.length > 0
       return list
     return false
 
 
-  updateOptions: (line) ->
+  __updateOptions: (line) ->
     options = line.match /(\w+(=|:)(\d|yes|no))+/g
     if options
       @options = {}
@@ -96,31 +156,31 @@ class Toc
           @options.links = parseInt value
 
 
-  hasToc: () ->
-    if @lines.length > 0
-      open = undefined
-      close = undefined
-      options = undefined
-
-      for i of @lines
-        line = @lines[i]
-        if open is false
-          if line.match /^<!--(.*)TOC(.*)-->$/g
-            open = i
-            options = line
-        else
-          if line.match /^<!--(.*)\/TOC(.*)-->$/g
-            close = i
-            break
-
-      if open isnt undefined and close isnt undefined
-        if options isnt undefined
-          @updateOptions options
-          return true
-
-    return false
+  # ----------------------------------------------------------------------------
+  # lightweight methods
 
 
-  onChange: (change) ->
-    @updateLines()
-    @updateToc()
+  # update raw lines after initialization or changes
+  ___updateLines: ->
+    if @editor isnt undefined
+      @lines = @editor.getBuffer().getLines()
+    else
+      @lines = []
+
+
+  # create hash and surround link withit
+  ___createLink: (name) ->
+    hash = new String name
+    hash = hash.toLowerCase().replace /\s/g, "-"
+    hash = hash.replace /[^a-z0-9\-]/g, ""
+    if hash.indexOf("--") > -1
+      hash = hash.replace /(-)+/g, "-"
+    if name.indexOf(":-") > -1
+      hash = hash.replace /:-/g, "-"
+    link = []
+    link.push "["
+    link.push name
+    link.push "](#"
+    link.push hash
+    link.push ")"
+    return link.join ""

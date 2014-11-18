@@ -4,7 +4,7 @@
     {
       'label': 'Toggle markdown-toc'
       'command': [
-          'markdown-toc:activate'
+          'markdown-toc:toggle'
         ]
     }
   ]
@@ -16,7 +16,7 @@
       'submenu': [
         {
           'label': 'Toggle'
-          'command': 'markdown-toc:activate'
+          'command': 'markdown-toc:toggle'
         }
       ]
     ]
