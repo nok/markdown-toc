@@ -9,6 +9,7 @@ class Toc
       depth: 6  # depth
       links: 1  # withLinks
       update: 1 # updateOnSave
+      ordered: 0 # orderedList
     @create()
 
     at = @
@@ -85,7 +86,7 @@ class Toc
     @__updateList()
     if Object.keys(@list).length > 0
       text = []
-      text.push "<!-- TOC depth:"+@options.depth+" withLinks:"+@options.links+" updateOnSave:"+@options.update+" -->\n"
+      text.push "<!-- TOC depth:"+@options.depth+" withLinks:"+@options.links+" updateOnSave:"+@options.update+" orderedList:"+@options.ordered+" -->\n"
       list = @__createList()
       if list isnt false
         Array.prototype.push.apply text, list
@@ -123,7 +124,11 @@ class Toc
       row = []
       for tab in [1..item.depth] when tab > 1
         row.push "\t"
-      row.push "- "
+      if @options.ordered is 1
+        row.push "1. "
+      else
+        row.push "- "
+
       line = item.line.substr item.depth
       line = line.trim()
       if @options.links is 1
@@ -161,6 +166,8 @@ class Toc
           @options.links = parseInt value
         else if key.toLowerCase().valueOf() is new String("updateonsave").valueOf()
           @options.update = parseInt value
+        else if key.toLowerCase().valueOf() is new String("orderedlist").valueOf()
+          @options.ordered = parseInt value
 
 
   # ----------------------------------------------------------------------------
