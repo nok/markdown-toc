@@ -85,7 +85,7 @@ class Toc
     @__updateList()
     if Object.keys(@list).length > 0
       text = []
-      text.push "<!-- TOC depth:"+@options.depth+" withLinks:"+@options.links+" updateOnSave:"+@options.update+" -->"
+      text.push "<!-- TOC depth:"+@options.depth+" withLinks:"+@options.links+" updateOnSave:"+@options.update+" -->\n"
       list = @__createList()
       if list isnt false
         Array.prototype.push.apply text, list
