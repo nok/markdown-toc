@@ -120,13 +120,15 @@ class Toc
   # create hierarchical markdown list
   __createList: () ->
     list = []
+    indicesOfDepth = Array.apply(null, new Array(6)).map(Number.prototype.valueOf, 0);
     for own i, item of @list
       row = []
 
       for tab in [1..item.depth] when tab > 1
         row.push "\t"
       if @options.orderedList is 1
-        row.push "1. "
+        row.push ++indicesOfDepth[item.depth-1] + ". "
+        indicesOfDepth = indicesOfDepth.map((value, index) -> if index < item.depth then value else 0)
       else
         row.push "- "
 
