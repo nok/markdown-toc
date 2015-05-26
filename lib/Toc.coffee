@@ -7,13 +7,14 @@ class Toc
     @list = []
     @options =
       depth: 6  # depth
-      links: 1  # withLinks
-      update: 1 # updateOnSave
+      withLinks: 1  # withLinks
+      updateOnSave: 1 # updateOnSave
+      orderedList: 0 # orderedList
     @create()
 
     at = @
     @editor.getBuffer().onWillSave () ->
-      if at.options.update is 1
+      if at.options.updateOnSave is 1
         if at._hasToc()
           at._deleteToc()
           at.editor.setTextInBufferRange [[at.open,0], [at.open,0]], at._createToc()
@@ -85,7 +86,7 @@ class Toc
     @__updateList()
     if Object.keys(@list).length > 0
       text = []
-      text.push "<!-- TOC depth:"+@options.depth+" withLinks:"+@options.links+" updateOnSave:"+@options.update+" -->"
+      text.push "<!-- TOC depth:"+@options.depth+" withLinks:"+@options.withLinks+" updateOnSave:"+@options.updateOnSave+" orderedList:"+@options.orderedList+" -->\n"
       list = @__createList()
       if list isnt false
         Array.prototype.push.apply text, list
@@ -119,14 +120,21 @@ class Toc
   # create hierarchical markdown list
   __createList: () ->
     list = []
+    indicesOfDepth = Array.apply(null, new Array(6)).map(Number.prototype.valueOf, 0);
     for own i, item of @list
       row = []
+
       for tab in [1..item.depth] when tab > 1
         row.push "\t"
-      row.push "- "
+      if @options.orderedList is 1
+        row.push ++indicesOfDepth[item.depth-1] + ". "
+        indicesOfDepth = indicesOfDepth.map((value, index) -> if index < item.depth then value else 0)
+      else
+        row.push "- "
+
       line = item.line.substr item.depth
       line = line.trim()
-      if @options.links is 1
+      if @options.withLinks is 1
         row.push @___createLink line
       else
         row.push line
@@ -158,9 +166,11 @@ class Toc
         if key.toLowerCase().valueOf() is new String("depth").valueOf()
           @options.depth = parseInt value
         else if key.toLowerCase().valueOf() is new String("withlinks").valueOf()
-          @options.links = parseInt value
+          @options.withLinks = parseInt value
         else if key.toLowerCase().valueOf() is new String("updateonsave").valueOf()
-          @options.update = parseInt value
+          @options.updateOnSave = parseInt value
+        else if key.toLowerCase().valueOf() is new String("orderedlist").valueOf()
+          @options.orderedList = parseInt value
 
 
   # ----------------------------------------------------------------------------
