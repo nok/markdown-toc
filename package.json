@@ -1,7 +1,7 @@
 {
   "name": "markdown-toc",
   "main": "./lib/markdown-toc",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Generate TOC (table of contents) of headlines from parsed markdown file",
   "activationCommands": {
     "atom-workspace": "markdown-toc:toggle"
