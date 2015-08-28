@@ -90,7 +90,7 @@ class Toc
       list = @__createList()
       if list isnt false
         Array.prototype.push.apply text, list
-      text.push "<!-- /TOC -->"
+      text.push "\n<!-- /TOC -->"
       return text.join "\n"
     return ""
 
