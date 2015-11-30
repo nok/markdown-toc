@@ -6,7 +6,8 @@ class Toc
     @lines = []
     @list = []
     @options =
-      depth: 6  # depth
+      depthFrom: 1  # depthFrom
+      depthTo: 6  # depthTo
       withLinks: 1  # withLinks
       updateOnSave: 1 # updateOnSave
       orderedList: 0 # orderedList
@@ -86,7 +87,7 @@ class Toc
     @__updateList()
     if Object.keys(@list).length > 0
       text = []
-      text.push "<!-- TOC depth:"+@options.depth+" withLinks:"+@options.withLinks+" updateOnSave:"+@options.updateOnSave+" orderedList:"+@options.orderedList+" -->\n"
+      text.push "<!-- TOC depthFrom:"+@options.depthFrom+" depthTo:"+@options.depthTo+" withLinks:"+@options.withLinks+" updateOnSave:"+@options.updateOnSave+" orderedList:"+@options.orderedList+" -->\n"
       list = @__createList()
       if list isnt false
         Array.prototype.push.apply text, list
@@ -110,8 +111,9 @@ class Toc
       line = @lines[i]
       result = line.match /^\#{1,6}/
       if result
-        depth = if @options.depth isnt undefined then @options.depth else 6
-        if result[0].length <= parseInt depth
+        depthFrom = if @options.depthFrom isnt undefined then @options.depthFrom else 1
+        depthTo = if @options.depthTo isnt undefined then @options.depthTo else 6
+        if (result[0].length <= parseInt depthTo) and (result[0].length >= parseInt depthFrom)
           @list.push
             depth: result[0].length
             line: new String line
@@ -120,11 +122,12 @@ class Toc
   # create hierarchical markdown list
   __createList: () ->
     list = []
-    indicesOfDepth = Array.apply(null, new Array(6)).map(Number.prototype.valueOf, 0);
+    depthFrom = if @options.depthFrom isnt undefined then @options.depthFrom else 1
+    depthTo = if @options.depthTo isnt undefined then @options.depthTo else 6
+    indicesOfDepth = Array.apply(null, new Array(depthTo - depthFrom)).map(Number.prototype.valueOf, 0);
     for own i, item of @list
       row = []
-
-      for tab in [1..item.depth] when tab > 1
+      for tab in [depthFrom..item.depth] when tab > depthFrom
         row.push "\t"
       if @options.orderedList is 1
         row.push ++indicesOfDepth[item.depth-1] + ". "
@@ -163,8 +166,10 @@ class Toc
           else
             value = 0
 
-        if key.toLowerCase().valueOf() is new String("depth").valueOf()
-          @options.depth = parseInt value
+        if key.toLowerCase().valueOf() is new String("depthfrom").valueOf()
+          @options.depthFrom = parseInt value
+        else if key.toLowerCase().valueOf() is new String("depthto").valueOf()
+          @options.depthTo = parseInt value
         else if key.toLowerCase().valueOf() is new String("withlinks").valueOf()
           @options.withLinks = parseInt value
         else if key.toLowerCase().valueOf() is new String("updateonsave").valueOf()
