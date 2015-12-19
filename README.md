@@ -19,7 +19,7 @@ apm install markdown-toc
 - Refresh list on save with `updateOnSave:1`
 - Use ordered list (1. ..., 2. ...) with `orderedList:0`
 
-## Contributers
+## Contributors
 
 - [spjoe](https://github.com/spjoe) (Feature: ordered list)
 - [brescia123](https://github.com/brescia123) (Feature: list range)
