@@ -13,12 +13,16 @@ apm install markdown-toc
 
 ## Features
 
-- Depth control [1-6]
 - Auto linking via  anchor tags, e.g.  `# A 1` → `#a-1`
-- Enable or disable links
-- Refresh list on save
-- Use ordered list (1. ..., 2. ...) by [spjoe](https://github.com/spjoe)
+- Depth control [1-6] with `depthFrom:1` and `depthTo:6`
+- Enable or disable links with `withLinks:1`
+- Refresh list on save with `updateOnSave:1`
+- Use ordered list (1. ..., 2. ...) with `orderedList:0`
 
+## Contributers
+
+- [spjoe](https://github.com/spjoe) (Feature: ordered list)
+- [brescia123](https://github.com/brescia123) (Feature: list range)
 
 ## Questions?
 
