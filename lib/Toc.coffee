@@ -107,8 +107,11 @@ class Toc
   __updateList: () ->
     @___updateLines()
     @list = []
+    isInCodeBlock = false
     for i of @lines
       line = @lines[i]
+      isInCodeBlock = !isInCodeBlock if line.match /^```/
+      continue if isInCodeBlock
       result = line.match /^\#{1,6}/
       if result
         depthFrom = if @options.depthFrom isnt undefined then @options.depthFrom else 1
