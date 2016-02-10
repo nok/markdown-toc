@@ -2,7 +2,7 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle markdown-toc'
+      'label': 'Toggle Markdown-toc'
       'command': [
           'markdown-toc:toggle'
         ]
@@ -12,7 +12,7 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'markdown-toc'
+      'label': 'Markdown-toc'
       'submenu': [
         {
           'label': 'Toggle'
