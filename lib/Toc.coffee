@@ -11,7 +11,6 @@ class Toc
       withLinks: 1  # withLinks
       updateOnSave: 1 # updateOnSave
       orderedList: 0 # orderedList
-    @create()
 
     at = @
     @editor.getBuffer().onWillSave () ->
@@ -49,6 +48,12 @@ class Toc
     if @_hasToc()
       @_deleteToc()
       @editor.setTextInBufferRange [[@open,0], [@open,0]], @_createToc()
+
+  toggle: ->
+    if @_hasToc()
+      @_deleteToc()
+    else
+      @editor.insertText @_createToc()
 
 
 
