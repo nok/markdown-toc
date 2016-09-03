@@ -56,6 +56,7 @@ Thanks to all contributors for any fix or improvement, whether small or large.
 - [Kévin Lanceplaine](https://github.com/lanceplaine)
 - [Ilya Zelenin](https://github.com/wyster)
 - [spjoe](https://github.com/spjoe)
+- [Tom Byrer](https://github.com/tomByrer)
 
 
 ## Questions?
