@@ -53,6 +53,7 @@ Thanks to all contributors for any fix or improvement, whether small or large.
 - [Ilya Zelenin](https://github.com/wyster)
 - [spjoe](https://github.com/spjoe)
 - [Tom Byrer](https://github.com/tomByrer)
+- [betrue12](https://github.com/betrue12)
 
 
 ## Questions?
