@@ -6,16 +6,12 @@ Generate and update magically a table of contents based on the headlines of a pa
 
 ## Table of Contents
 
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:0 orderedList:0 -->
-
-	- [Usage](#usage)
-	- [Installation](#installation)
-	- [Features](#features)
-	- [Contributors](#contributors)
-	- [Questions?](#questions)
-	- [License](#license)
-
-<!-- /TOC -->
+- [Usage](#usage)
+- [Installation](#installation)
+- [Features](#features)
+- [Contributors](#contributors)
+- [Questions?](#questions)
+- [License](#license)
 
 
 ## Usage
