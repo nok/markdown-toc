@@ -1,8 +1,36 @@
-# Markdown TOC
+Markdown TOC
+============
 
-Generate TOC (*table of contents*) of headlines from parsed [markdown](http://en.wikipedia.org/wiki/Markdown) file.
+Generate and update magically a table of contents based on the headlines of a parsed [markdown](http://en.wikipedia.org/wiki/Markdown) file.
 
-![Usage example](https://raw.githubusercontent.com/nok/markdown-toc/master/RECORD.gif)
+
+## Table of Contents
+
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:0 orderedList:0 -->
+
+	- [Usage](#usage)
+	- [Installation](#installation)
+	- [Features](#features)
+	- [Contributors](#contributors)
+	- [Questions?](#questions)
+	- [License](#license)
+
+<!-- /TOC -->
+
+
+## Usage
+
+![Magic](https://raw.githubusercontent.com/nok/markdown-toc/master/RECORD.gif)
+
+<!--
+## API Attributes
+
+- `depthFrom:1`
+- `depthTo:6`
+- `withLinks:1`
+- `updateOnSave:1`
+- `orderedList:0`
+-->
 
 ## Installation
 
@@ -19,16 +47,22 @@ apm install markdown-toc
 - Refresh list on save with `updateOnSave:1`
 - Use ordered list (1. ..., 2. ...) with `orderedList:0`
 
+
 ## Contributors
 
-- [spjoe](https://github.com/spjoe) (Feature: ordered list)
-- [brescia123](https://github.com/brescia123) (Feature: list range)
+Thanks to all contributors for any fix or improvement, whether small or large.
+
+- [Giacomo Bresciani](https://github.com/brescia123)
+- [Kévin Lanceplaine](https://github.com/lanceplaine)
+- [Ilya Zelenin](https://github.com/wyster)
+- [spjoe](https://github.com/spjoe)
+
 
 ## Questions?
 
-Don't be shy and feel free to contact me via [Twitter](https://twitter.com/darius_morawiec).
+Don't be shy and feel free to contact me on [Twitter](https://twitter.com/darius_morawiec).
 
 
 ## License
 
-The package is Open Source Software released under the [License](LICENSE.md). It's developed by [Darius Morawiec](http://nok.onl).
+The package is Open Source Software released under the [MIT](LICENSE.md) license.
