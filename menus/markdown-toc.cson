@@ -2,21 +2,31 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle markdown-toc'
-      'command': [
-          'markdown-toc:toggle'
-        ]
+      'label': 'Toggle Markdown TOC'
+      'command': 'markdown-toc:toggle'
     }
   ]
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'markdown-toc'
+      'label': 'Markdown TOC'
       'submenu': [
         {
-          'label': 'Toggle'
+          'label': 'Toggle TOC'
           'command': 'markdown-toc:toggle'
+        },
+        {
+          'label': 'Add TOC'
+          'command': 'markdown-toc:create'
+        },
+        {
+          'label': 'Update TOC'
+          'command': 'markdown-toc:update'
+        },
+        {
+          'label': 'Remove TOC'
+          'command': 'markdown-toc:delete'
         }
       ]
     ]
